@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BonziWORLD Revived 2025 Edition</title>
+        <meta charset="utf-8" />
+        <meta content="" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="stylesheet" type="text/css" href="./css/style.min.css" />
+        <link rel="stylesheet" type="text/css" href="./css/bzw_style.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" href="./favicons/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./favicons/favicon-16x16.png" sizes="16x16" />
+        <link rel="manifest" href="./favicons/manifest.json" />
+        <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="./favicons/favicon.ico" />
+        <meta name="msapplication-config" content="./favicons/browserconfig.xml" />
+        <meta name="theme-color" content="#ffffff" />
+        <style id="theme"></style>
+        <style>
+
+            /* Start Menu Styles */
+            .start-menu {
+                position: fixed;
+                bottom: 30px;
+                left: 0px;
+                width: 360px;
+                height: 500px;
+                background: linear-gradient(to right, #1e4f8e 0%, #2a5b9a 100%);
+                border: 2px solid #245edc;
+                border-bottom: none;
+                box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+                z-index: 10001;
+                display: flex;
+                flex-direction: column;
+                border-radius: 8px 8px 0 0;
+                overflow: hidden;
+                display: none;
+            }
+
+            .start-menu.visible {
+                display: flex;
+            }
+
+            .start-menu-header {
+                background: linear-gradient(
+                    to bottom,
+                    #092f57 0%,
+                    #0a3560 100%
+                );
+                padding: 15px;
+                border-bottom: 1px solid #1a4a7a;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+            }
+
+            .user-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                border: 2px solid #4b8ce8;
+                margin-right: 12px;
+            }
+
+            .user-details {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .username {
+                font-size: 16px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 4px;
+            }
+
+            .user-status {
+                font-size: 12px;
+                color: #7eb6ea;
+            }
+
+            .start-menu-body {
+                display: flex;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            .start-menu-programs {
+                flex: 3;
+                background: rgba(0, 0, 0, 0.2);
+                padding: 10px;
+            }
+
+            .start-menu-shortcuts {
+                flex: 2;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 10px;
+                border-left: 1px solid #1a4a7a;
+            }
+
+            .program-list {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .program-item,
+            .shortcut-item {
+                height: 36px;
+                display: flex;
+                align-items: center;
+                padding: 0 12px;
+                margin-bottom: 4px;
+                border-radius: 4px;
+                cursor: pointer;
+                color: white;
+                font-size: 14px;
+                transition: all 0.2s;
+            }
+
+            .program-item i,
+            .shortcut-item i {
+                margin-right: 10px;
+                width: 20px;
+                text-align: center;
+            }
+
+            .program-item:hover,
+            .shortcut-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .program-item:active,
+            .shortcut-item:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .menu-divider {
+                border: none;
+                border-top: 1px solid #1a4a7a;
+                margin: 10px 0;
+            }
+
+            .shutdown {
+                color: #ff6b6b;
+            }
+
+            .shutdown:hover {
+                background: rgba(255, 107, 107, 0.1);
+            }
+
+            /* Chat bar send button as Start button */
+            #chat_send {
+                background-image: url("../img/desktop/start.png");
+                cursor: pointer;
+            }
+
+            #chat_send:hover {
+                background-position: 0 -33px;
+                cursor: pointer;
+            }
+
+            #chat_send:active {
+                background-position: 0 -67px;
+                cursor: pointer;
+            }
+
+            /* System tray in chat bar */
+            .system-tray {
+                display: flex;
+                align-items: center;
+                padding-right: 5px;
+            }
+
+            .tray-item {
+                height: 24px;
+                background: rgba(255, 255, 255, 0.0);
+                padding: 0 8px;
+                margin-left: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                min-width: 60px;
+                color: white;
+            }
+
+            #clock {
+                min-width: 50px;
+                text-align: center;
+            }
+        </style>
+        <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
+        <script src="https://code.createjs.com/1.0.0/preloadjs.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
+        <script src="./js/lib/seedrandom.min.js"></script>
+        <script src="./js/lib/socket.io-1.4.5.js"></script>
+        <script src="./espeak.js"></script>
+        <script src="./js/lib/jquery.contextMenu.min.js"></script>
+        <script src="./js/platform.js"></script>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script src="bwr_core.js"></script>
+
+    </head>
+    <body oncontextmenu="return false">
+        <div id="page_login" class="page">
+            <div id="login_apps" class="app_showcase"></div>
+            <div id="login_readme">
+                <marquee><gay-rainbow>Welcome to Windows XP Chat Edition!</gay-rainbow></marquee>
+                The real one. All clones are unofficial.
+                <hr />
+                <a href="readme.html">README</a> <a href="faq.html">FAQ</a> <a href="slang.html">BonziWORLD Slang</a>
+                <br />
+                <h5>Artwork by Commo512</h5>
+            </div>
+            <div id="login_card" style="display: none;">
+                <input id="login_name" type="text" placeholder="Name" />
+                <input id="login_room" list="login_rooms" type="text" placeholder="Room ID (Optional)" />
+                <datalist id="login_rooms">
+                    <option value="default"></option>
+                    <option value="bonzi_tv"></option>
+                    <option value="ai"></option>
+                </datalist>
+                <div id="login_error" style="display: none;"></div>
+                <div id="login_go"></div>
+            </div>
+            <div id="login_load">loading</div>
+            <div id="login_version">Version 1.0.2</div>
+            <div id="login_social">
+                <a href="https://www.roblox.com/games/92105806166117/BonziWORLD-Revived-Crossplay#!/about" target="_blank" style="margin-right: 10px;"><img src="roblox.png" /></a>
+                <a href="https://www.youtube.com/@TheManOfMostFaygo" target="_blank" style="margin-right: 10px;"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div id="page_error" class="page" style="display: none;">
+            <div id="error_cont" class="message_cont">
+                <img src="./img/error/logo.png">
+                <br>
+                An error has occurred. Please try reloading the page. If that doesn't work, report the bug.
+            </div>
+        </div>
+        <div id="page_ban" class="page" style="display: none;">
+            <div id="ban_cont" class="message_cont">
+                <img src="./img/ban/logo.png">
+                <br />
+                <h1>You have been banned from BWR</h1>
+                <br />
+                <br />
+                <b>Reason: </b><span id="ban_reason"></span><br />
+                <b>Deadline: </b><span id="ban_end"></span><br />
+            </div>
+        </div>
+        <div id="page_kick" class="page" style="display: none;">
+            <div id="kick_cont" class="message_cont">
+                <img src="./img/ban/logo.png">
+                <br />
+                <h1>You have been kicked from BWR</h1>
+                <br />
+                <br />
+                <b>Reason: </b><span id="kick_reason"></span><br />
+            </div>
+        </div>
+        
+        <!-- Start Menu -->
+        <div id="start_menu" class="start-menu">
+            <div class="start-menu-header">
+                <div class="user-info">
+                    <img
+                        src="./favicons/user-icon.png"
+                        alt="User"
+                        class="user-avatar"
+                    />
+                    <div class="user-details">
+                        <span class="username">Guest</span>
+                        <span class="user-status">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="start-menu-body">
+                <!-- Left Panel - Programs -->
+                <div class="start-menu-programs">
+                    <div class="program-list">
+                        <div class="program-item" data-action="chat">
+                            <i class="fas fa-comments"></i>
+                            <span>Chat</span>
+                        </div>
+                        <div class="program-item" data-action="agents">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Agents</span>
+                        </div>
+                        <div class="program-item" data-action="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </div>
+                        <div class="program-item" data-action="help">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help</span>
+                        </div>
+                        <div class="program-item" data-action="games">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Games</span>
+                        </div>
+                        <div class="program-item" data-action="web">
+                            <i class="fas fa-globe"></i>
+                            <span>Web Browser</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Shortcuts -->
+                <div class="start-menu-shortcuts">
+                    <div class="shortcut-item" data-action="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </div>
+                    <div class="shortcut-item" data-action="friends">
+                        <i class="fas fa-users"></i>
+                        <span>Friends List</span>
+                    </div>
+                    <div class="shortcut-item" data-action="store">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Store</span>
+                    </div>
+                    <hr class="menu-divider" />
+                    <div class="shortcut-item shutdown" data-action="logout">
+                        <i class="fas fa-power-off"></i>
+                        <span>Log Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="bonzi_tv"></div>
+            <div class="top-bar-wrapper ng-cloak" id="top_bar">
+                <div class="top-bar-inner">
+                    <div class="top-bar-item top-bar-left"><img src="/bonzi/bonzi_sg-32x32.png" alt="BonziWORLD" title="BonziWORLD" /></div>
+                    <div class="top-bar-item top-bar-middle"></div>
+                    <div class="top-bar-item top-bar-right">
+                        <div class="left-group">
+                            <span hidden>
+                                <div class="top-bar-user tbr-item" id="tb-user-dd-toggle">
+                                    <div class="directory-wrapper">
+                                        <div class="directory-badge" title="Directory" data-ng-click="global.sbCtrl.changeView('directory:default');"><i class="fas fa-comments" aria-hidden="true"></i><span> Rooms</span></div>
+                                    </div>
+                                </div>
+                            </span>
+                            <div class="top-discord-user tbr-item" id="tb-discord-toggle">
+                                <div class="tbr-i-inner">
+                                    <div class="directory-badge" title="Directory" onclick="window.open('https://www.roblox.com/games/124665028451717/WXPCE-Sandbox#!/about')">
+                                        <img src="roblox_black.png" width="16" /><span> Roblox</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top-roblox-user tbr-item" id="tb-roblox-toggle">
+                                <div class="directory-wrapper">
+                                    <div class="badge" title="Games" id="games_button">🎮<span> Games</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="top-bar-user" id="tb-user-dd-toggle">
+                            <pre><button onclick="hideUI()">Hide UI</button></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="top-bar-wrapper ng-cloak" id="sub_top_bar">
+                <div class="top-bar-inner">
+                    <div class="top-bar-item top-bar-left top-bar-room-info">
+                        <div class="room-name-wrapper ng-cloak" data-ng-if="global.room">
+                            <div class="room-icon" title="Room Icon"><i class="far fa-comments" aria-hidden="true"></i></div>
+                            <div class="room-name" title="Room Name"><span class="room-name" data-ng-bind="global.room.name"></span></div>
+                        </div>
+                    </div>
+                    <div class="top-bar-item top-bar-middle"></div>
+                    <div class="top-bar-item top-bar-right">
+                    </div>
+                </div>
+            </div>
+            <div id="room_info">
+                Room ID - <span class="room_id">???</span>
+                <br />
+                <span id="room_public">This room is public.</span>
+                <span id="room_private">This room is private.</span>
+                <span id="room_owner">
+                    <br />
+                    You are the owner of this room.
+                </span>
+                <div id="bonzicoins" onclick="coinPopup()"><b>You have <span class="coin_count">0</span> BonziCOINs. <img src="bonzicoin.png" width=16></b></div>
+            </div>
+            <div id="chat_log_button"></div>
+            <div id="chat_log" class="window" style="display: none;">
+                <div class="window_header">
+                    BonziLOG™
+                    <div id="chat_log_close" class="window_close"></div>
+                </div>
+                <div class="window_body">
+                    <div id="chat_log_content"></div>
+                </div>
+                <div id="chat_log_resize"></div>
+            </div>
+            <table id="chat_bar">
+                <tbody>
+                    <tr>
+                        <td id="chat_send">Send</td>
+                        <td id="chat_message_cont">
+                           <input 
+                               id="chat_message" 
+                               type="text" 
+                               placeholder="To chat click here or press any key on your keyboard | /help for help" /></td>
+                        <td id="chat_tray">
+                            <div class="system-tray">
+                                <div id="clock" class="tray-item">00:00 PM</div>
+                                <div id="btn_tile" class="tray_btn"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+            <canvas id="agent_canvas" width="100" height="100"></canvas>
+        </div>
+        <div id="titlebar">
+            <div id="minimize"></div>
+            <div id="maximize"></div>
+            <div id="close"></div>
+        </div>
+        <script>
+            // Start Menu functionality
+            let startMenuVisible = false;
+
+            // Initialize Start Menu
+            $(document).ready(function () {
+                initStartMenu();
+            });
+
+            function initStartMenu() {
+                // Use the Send button as Start button
+                $("#chat_send").click(function (e) {
+                    e.stopPropagation();
+                    if ($(e.target).is("#chat_send")) {
+                        toggleStartMenu();
+                    }
+                });
+
+                // Also allow right-click on Send button for context?
+                $("#chat_send").contextMenu({
+                    selector: "#chat_send",
+                    build: function ($trigger, e) {
+                        return {
+                            items: {
+                                startMenu: {
+                                    name: "Start Menu",
+                                    callback: function () {
+                                        toggleStartMenu();
+                                    },
+                                },
+                                separator1: "---------",
+                                settings: {
+                                    name: "Settings",
+                                    callback: function () {
+                                        openSettings();
+                                    },
+                                },
+                                help: {
+                                    name: "Help",
+                                    callback: function () {
+                                        helpPopup();
+                                    },
+                                },
+                            },
+                        };
+                    },
+                });
+
+                // Close start menu when clicking outside
+                $(document).click(function (e) {
+                    if (
+                        !$(e.target).closest("#start_menu, #chat_send")
+                            .length &&
+                        startMenuVisible
+                    ) {
+                        hideStartMenu();
+                    }
+                });
+
+                // Program click handlers
+                $(".program-item, .shortcut-item").click(function () {
+                    const action = $(this).data("action");
+                    handleStartMenuAction(action);
+                    hideStartMenu();
+                });
+
+                // System tray click handlers
+                $("#settings-tray").click(function () {
+                    openSettings();
+                });
+
+                $("#volume-control").click(function () {
+                    toggleMute();
+                });
+
+                // Update clock
+                updateClock();
+                setInterval(updateClock, 60000);
+            }
+
+            function toggleStartMenu() {
+                if (startMenuVisible) {
+                    hideStartMenu();
+                } else {
+                    showStartMenu();
+                }
+            }
+
+            function showStartMenu() {
+                $("#start_menu").addClass("visible");
+                $("#chat_send").css({
+                    background: "url(../img/desktop/start.png)",
+                    color: "#fff",
+                });
+                startMenuVisible = true;
+
+                // Update user info if logged in
+                if (localStorage.name) {
+                    $(".username").text(localStorage.name);
+                }
+                if (window.coinBalance) {
+                    $("#coin-count").text(window.coinBalance);
+                }
+            }
+
+            function hideStartMenu() {
+                $("#start_menu").removeClass("visible");
+                $("#chat_send").css({
+                    background: "",
+                    color: "",
+                });
+                startMenuVisible = false;
+            }
+
+            function handleStartMenuAction(action) {
+                switch (action) {
+                    case "chat":
+                        // Focus chat input
+                        $("#chat_message").focus();
+                        break;
+
+                    case "agents":
+                        // Show agent management
+                        showAgentManager();
+                        break;
+
+                    case "settings":
+                        openSettings();
+                        break;
+
+                    case "help":
+                        helpPopup();
+                        break;
+
+                    case "games":
+                        // Trigger games button click
+                        if ($("#games_button").length) {
+                            $("#games_button").click();
+                        } else {
+                            // Fallback to opening games dialog
+                            new Dialog({
+                                title: "Games",
+                                class: "flex_window",
+                                html: `<iframe src="../games.html" style="width: 100%; height: 100%;"></iframe>`,
+                                x: 400,
+                                y: 200,
+                                width: 960,
+                                height: 600,
+                            });
+                        }
+                        break;
+
+                    case "flash":
+                        createFlashWindow();
+                        break;
+
+                    case "web":
+                        createIframeWindow(
+                            "https://www.google.com",
+                            "Web Browser",
+                        );
+                        break;
+
+                    case "profile":
+                        showProfile();
+                        break;
+
+                    case "coins":
+                        coinPopup();
+                        break;
+
+                    case "friends":
+                        showFriendsList();
+                        break;
+
+                    case "store":
+                        showStore();
+                        break;
+
+                    case "logout":
+                        if (confirm("Are you sure you want to log out?")) {
+                            socket.emit("command", { list: ["exit"] });
+                            location.reload();
+                        }
+                        break;
+                }
+            }
+
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, "0");
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                $("#clock").text(`${hours}:${minutes} ${ampm}`);
+            }
+
+            function toggleMute() {
+                // Toggle mute for local agent
+                if (localAgent) {
+                    localAgent.mute = !localAgent.mute;
+                    const icon = $("#volume-control i");
+                    if (localAgent.mute) {
+                        icon.removeClass("fa-volume-up").addClass(
+                            "fa-volume-mute",
+                        );
+                    } else {
+                        icon.removeClass("fa-volume-mute").addClass(
+                            "fa-volume-up",
+                        );
+                    }
+                }
+            }
+
+            // Helper functions for Start Menu actions
+            function showAgentManager() {
+                new Dialog({
+                    title: "Agent Manager",
+                    html: `
+                        <div style="padding: 20px;">
+                            <h3>Active Agents: ${Object.keys(agents || {}).length}</h3>
+                            <div id="agent-list" style="max-height: 300px; overflow-y: auto; margin: 10px 0;">
+                                ${
+                                    Object.entries(agents || {})
+                                        .map(
+                                            ([id, agent]) => `
+                                    <div class="agent-manager-item" data-agent-id="${id}" style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
+                                        <img src="${agent.userPublic.color && agent.userPublic.color.startsWith("http") ? agent.userPublic.color : "./favicons/user-icon.png"}" 
+                                             style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">
+                                        <div style="flex: 1;">
+                                            <strong>${agent.userPublic.name}</strong><br>
+                                            <small>Agent: ${agent.userPublic.color || "default"}</small>
+                                        </div>
+                                        <button onclick="manageAgent('${id}', 'mute')" style="padding: 4px 8px; font-size: 12px;">
+                                            ${agent.mute ? "Unmute" : "Mute"}
+                                        </button>
+                                    </div>
+                                `,
+                                        )
+                                        .join("") || "<p>No agents active</p>"
+                                }
+                            </div>
+                            <button onclick="$('#btn_tile').click()" style="padding: 8px 16px; margin-right: 10px;">Tile All Agents</button>
+                            <button onclick="centerAgents()" style="padding: 8px 16px;">Center All Agents</button>
+                        </div>
+                    `,
+                    width: 400,
+                    height: 400,
+                    x: 100,
+                    y: 100,
+                });
+            }
+
+            function manageAgent(id, action) {
+                const agent = agents[id];
+                if (!agent) return;
+
+                if (action === "mute") {
+                    agent.mute = !agent.mute;
+                    if (agent.mute) {
+                        agent.sprite.gotoAndPlay("muted_fwd");
+                    } else {
+                        agent.sprite.gotoAndPlay("muted_back");
+                    }
+                    // Refresh the dialog
+                    showAgentManager();
+                }
+            }
+
+            function centerAgents() {
+                const winWidth = $(window).width();
+                const winHeight = $(window).height();
+
+                Object.values(agents || {}).forEach((agent, index) => {
+                    const x = winWidth / 2 - 100;
+                    const y = winHeight / 2 - 80 + index * 20;
+                    agent.move(x, y);
+                });
+            }
+
+            function showProfile() {
+                const agent = localAgent || (agents && agents[bonzi_guid]);
+                if (!agent) {
+                    alert("You need to be logged in to view profile.");
+                    return;
+                }
+
+                new Dialog({
+                    title: "Your Profile",
+                    html: `
+                        <div style="padding: 20px; text-align: center;">
+                            <img src="${agent.userPublic.color && agent.userPublic.color.startsWith("http") ? agent.userPublic.color : "./img/agents/" + (agent.userPublic.color || "bonzi") + ".png"}" 
+                                 style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px; object-fit: cover;">
+                            <h2>${agent.userPublic.name}</h2>
+                            <p><strong>Agent:</strong> ${agent.userPublic.color || "default"}</p>
+                            <p><strong>Voice:</strong> ${agent.userPublic.voice || "default"}</p>
+                            <p><strong>Pitch:</strong> ${agent.userPublic.pitch || "default"}</p>
+                            <p><strong>Speed:</strong> ${agent.userPublic.speed || "default"}</p>
+                            <p><strong>BonziCOINs:</strong> <span id="profile-coins">${window.coinBalance || 0}</span></p>
+                            <hr>
+                            <button onclick="openSettings()" style="padding: 8px 16px; margin: 5px;">Edit Settings</button>
+                        </div>
+                    `,
+                    width: 350,
+                    height: 450,
+                    x: 150,
+                    y: 150,
+                });
+            }
+
+            function showFriendsList() {
+                new Dialog({
+                    title: "Friends",
+                    html: `
+                        <div style="padding: 20px;">
+                            <input type="text" placeholder="Search friends..." style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;">
+                            <div id="friends-list" style="max-height: 300px; overflow-y: auto;">
+                                <p style="text-align: center; color: #666; padding: 20px;">No friends online</p>
+                            </div>
+                            <hr style="margin: 15px 0;">
+                            <button onclick="addFriend()" style="padding: 8px 16px; margin-right: 10px;">Add Friend</button>
+                            <button onclick="showFriendRequests()" style="padding: 8px 16px;">Friend Requests</button>
+                        </div>
+                    `,
+                    width: 300,
+                    height: 400,
+                    x: 200,
+                    y: 200,
+                });
+            }
+
+            function addFriend() {
+                const friendName = prompt("Enter friend's username:");
+                if (friendName) {
+                    // In a real implementation, you would send this to the server
+                    alert(`Friend request sent to ${friendName}`);
+                }
+            }
+
+            function showFriendRequests() {
+                new Dialog({
+                    title: "Friend Requests",
+                    html: `
+                        <div style="padding: 20px;">
+                            <p style="text-align: center; color: #666;">No pending friend requests</p>
+                        </div>
+                    `,
+                    width: 300,
+                    height: 200,
+                    x: 200,
+                    y: 200,
+                });
+            }
+
+            function showStore() {
+                new Dialog({
+                    title: "BonziCOIN Store",
+                    html: `
+                        <div style="padding: 20px;">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <h3>Your Balance: <span id="store-balance">${window.coinBalance || 0}</span> BonziCOINs</h3>
+                            </div>
+                            <div class="store-items" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                                <div class="store-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <h4 style="margin-top: 0;">Custom Avatar</h4>
+                                    <p>Upload your own avatar image</p>
+                                    <p><strong>Price: 1000 coins</strong></p>
+                                    <button onclick="buyItem('custom_avatar')" style="padding: 8px 16px; margin-top: 10px;">Buy</button>
+                                </div>
+                                <div class="store-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <h4 style="margin-top: 0;">Premium Voice</h4>
+                                    <p>Access to premium TTS voices</p>
+                                    <p><strong>Price: 500 coins</strong></p>
+                                    <button onclick="buyItem('premium_voice')" style="padding: 8px 16px; margin-top: 10px;">Buy</button>
+                                </div>
+                                <div class="store-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <h4 style="margin-top: 0;">Agent Hat</h4>
+                                    <p>Add a hat to your agent</p>
+                                    <p><strong>Price: 250 coins</strong></p>
+                                    <button onclick="buyItem('agent_hat')" style="padding: 8px 16px; margin-top: 10px;">Buy</button>
+                                </div>
+                                <div class="store-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <h4 style="margin-top: 0;">Rainbow Text</h4>
+                                    <p>Use rainbow text in chat</p>
+                                    <p><strong>Price: 150 coins</strong></p>
+                                    <button onclick="buyItem('rainbow_text')" style="padding: 8px 16px; margin-top: 10px;">Buy</button>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    width: 500,
+                    height: 500,
+                    x: 100,
+                    y: 100,
+                });
+            }
+
+            function buyItem(item) {
+                alert(
+                    `Purchased ${item}! This feature would deduct coins in a real implementation.`,
+                );
+            }
+
+            // Update coin balance when received from server
+            if (typeof socket !== "undefined") {
+                socket.on("balanceUpdate", function (balance) {
+                    window.coinBalance = balance;
+                    $("#coin-count").text(balance);
+                    $("#store-balance").text(balance);
+                    $("#profile-coins").text(balance);
+                });
+            }
+
+            // Update the sendInput function to work with Start Menu
+            const originalSendInput = window.sendInput;
+            window.sendInput = function () {
+                // Only send if we're not showing the Start Menu
+                if (!startMenuVisible) {
+                    originalSendInput();
+                }
+            };
+
+            // Override the Enter key to close Start Menu first
+            $(document).keypress(function (e) {
+                if (e.which == 13 && startMenuVisible) {
+                    hideStartMenu();
+                    $("#chat_message").focus();
+                }
+            });
+        </script>
+    </body>
+</html>
