@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>BonziWORLD Revived 2025 Edition</title>
+        <title>Windows XP Chat Edition</title>
         <meta charset="utf-8" />
         <meta content="" />
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
@@ -192,6 +192,110 @@
                 min-width: 50px;
                 text-align: center;
             }
+
+            /* Browser window styles */
+            .browser-window {
+                position: absolute;
+                width: 900px;
+                height: 600px;
+                border: 1px solid #666;
+                box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+                background: #fff;
+                z-index: 10010;
+                display: flex;
+                flex-direction: column;
+                border-radius: 6px;
+                overflow: hidden;
+                user-select: none;
+            }
+
+            .browser-header {
+                background: linear-gradient(#f5f7fa, #e9eef8);
+                height: 34px;
+                display: flex;
+                align-items: center;
+                padding: 0 8px;
+                border-bottom: 1px solid #d0d7e6;
+                cursor: move;
+            }
+
+            .browser-title {
+                flex: 1;
+                font-weight: bold;
+                font-size: 13px;
+                color: #333;
+                padding-left: 6px;
+            }
+
+            .browser-controls {
+                display: flex;
+                align-items: center;
+            }
+
+            .browser-controls button {
+                background: transparent;
+                border: none;
+                padding: 6px;
+                margin-left: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .browser-toolbar {
+                display: flex;
+                align-items: center;
+                padding: 6px;
+                gap: 6px;
+                border-bottom: 1px solid #e1e7f3;
+            }
+
+            .browser-toolbar button {
+                padding: 6px 8px;
+                border: 1px solid #cfd9ea;
+                background: #fff;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 13px;
+            }
+
+            .browser-toolbar input.address {
+                flex: 1;
+                padding: 6px 8px;
+                border: 1px solid #cfd9ea;
+                border-radius: 4px;
+                font-size: 13px;
+            }
+
+            .browser-iframe {
+                flex: 1;
+                border: none;
+                width: 100%;
+                height: 100%;
+                background: #fff;
+            }
+
+            .browser-bottom {
+                height: 26px;
+                background: #f4f7fb;
+                border-top: 1px solid #e1e7f3;
+                display: flex;
+                align-items: center;
+                padding: 0 8px;
+                font-size: 12px;
+                color: #666;
+            }
+
+            /* resize handle */
+            .browser-resize {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                right: 2px;
+                bottom: 2px;
+                cursor: nwse-resize;
+                opacity: 0.6;
+            }
         </style>
         <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
         <script src="https://code.createjs.com/1.0.0/preloadjs.min.js"></script>
@@ -229,7 +333,7 @@
                 <div id="login_go"></div>
             </div>
             <div id="login_load">loading</div>
-            <div id="login_version">Version 1.0.2</div>
+            <div id="login_version">Version 1.0.4</div>
             <div id="login_social">
                 <a href="https://www.roblox.com/games/92105806166117/BonziWORLD-Revived-Crossplay#!/about" target="_blank" style="margin-right: 10px;"><img src="roblox.png" /></a>
                 <a href="https://www.youtube.com/@TheManOfMostFaygo" target="_blank" style="margin-right: 10px;"><i class="fab fa-youtube" aria-hidden="true"></i></a>
@@ -512,7 +616,6 @@
             function showStartMenu() {
                 $("#start_menu").addClass("visible");
                 $("#chat_send").css({
-                    background: "url(../img/desktop/start.png)",
                     color: "#fff",
                 });
                 startMenuVisible = true;
@@ -578,10 +681,8 @@
                         break;
 
                     case "web":
-                        createIframeWindow(
-                            "https://www.google.com",
-                            "Web Browser",
-                        );
+                        // Open a full browser window (new browser implementation)
+                        createBrowserWindow("https://www.google.com");
                         break;
 
                     case "profile":
@@ -608,6 +709,235 @@
                         break;
                 }
             }
+
+            /************************************************************************
+             * Simple in-app Web Browser
+             * - createBrowserWindow(url) opens a draggable, resizable browser window
+             * - each browser window keeps its own simple history stack
+             *
+             * Note: Cross-origin pages won't allow reading iframe location or title.
+             * Navigation is done by setting iframe.src and tracking URLs in the window history.
+             ************************************************************************/
+
+            // Keep track of browser windows z-index
+            let browserTopZ = 10010;
+
+            function createBrowserWindow(startUrl) {
+                startUrl = startUrl || "https://www.google.com";
+
+                // Create container
+                const $win = $(`
+                    <div class="browser-window">
+                        <div class="browser-header">
+                            <div class="browser-title">Web Browser</div>
+                            <div class="browser-controls">
+                                <button class="btn-minimize" title="Minimize"><i class="fas fa-window-minimize"></i></button>
+                                <button class="btn-close" title="Close"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="browser-toolbar">
+                            <button class="btn-back" title="Back"><i class="fas fa-arrow-left"></i></button>
+                            <button class="btn-forward" title="Forward"><i class="fas fa-arrow-right"></i></button>
+                            <button class="btn-reload" title="Reload"><i class="fas fa-sync-alt"></i></button>
+                            <input class="address" type="text" value="${startUrl}" />
+                            <button class="btn-go" title="Go">Go</button>
+                        </div>
+                        <iframe class="browser-iframe" src="${startUrl}"></iframe>
+                        <div class="browser-bottom">Ready</div>
+                        <div class="browser-resize"><svg width="16" height="16"><path d="M0 16 L16 0" stroke="#888" stroke-width="2"/></svg></div>
+                    </div>
+                `);
+
+                // Append to content and position
+                $("#content").append($win);
+                // initial position: center-ish
+                const left = Math.max(40, ($(window).width() - 900) / 2 + Math.random() * 80 - 40);
+                const top = Math.max(40, ($(window).height() - 600) / 2 + Math.random() * 80 - 40);
+                $win.css({ left: left + "px", top: top + "px", zIndex: ++browserTopZ });
+
+                // history tracking
+                const history = [startUrl];
+                let historyIndex = 0;
+
+                const $iframe = $win.find(".browser-iframe");
+                const $address = $win.find(".address");
+                const $bottom = $win.find(".browser-bottom");
+                const $back = $win.find(".btn-back");
+                const $forward = $win.find(".btn-forward");
+                const $reload = $win.find(".btn-reload");
+                const $go = $win.find(".btn-go");
+                const $title = $win.find(".browser-title");
+
+                // update toolbar state
+                function updateNavState() {
+                    $back.prop("disabled", historyIndex <= 0);
+                    $forward.prop("disabled", historyIndex >= history.length - 1);
+                    $address.val(history[historyIndex]);
+                    $bottom.text(history[historyIndex]);
+                }
+
+                updateNavState();
+
+                function navigateTo(url, addToHistory = true) {
+                    if (!url) return;
+                    // Basic URL normalization (if user types a search term, attempt https)
+                    if (!/^https?:\/\//i.test(url)) {
+                        // if it looks like a domain, add https://, otherwise search via Google
+                        if (/\.[a-z]{2,}$/i.test(url) || url === "about:blank") {
+                            url = "https://" + url;
+                        } else {
+                            url = "https://www.google.com/search?q=" + encodeURIComponent(url);
+                        }
+                    }
+                    $iframe.attr("src", url);
+                    if (addToHistory) {
+                        // trim forward history
+                        if (historyIndex < history.length - 1) {
+                            history.splice(historyIndex + 1);
+                        }
+                        history.push(url);
+                        historyIndex = history.length - 1;
+                    }
+                    updateNavState();
+                }
+
+                // Hook buttons
+                $back.on("click", function (e) {
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        navigateTo(history[historyIndex], false);
+                        updateNavState();
+                    }
+                });
+
+                $forward.on("click", function (e) {
+                    if (historyIndex < history.length - 1) {
+                        historyIndex++;
+                        navigateTo(history[historyIndex], false);
+                        updateNavState();
+                    }
+                });
+
+                $reload.on("click", function (e) {
+                    // reload current src
+                    $iframe[0].contentWindow.location.reload();
+                });
+
+                $go.on("click", function (e) {
+                    const val = $address.val().trim();
+                    navigateTo(val, true);
+                });
+
+                $address.on("keypress", function (e) {
+                    if (e.which === 13) {
+                        const val = $address.val().trim();
+                        navigateTo(val, true);
+                    }
+                });
+
+                // iframe load handling: update bottom bar (can't access cross-origin title)
+                $iframe.on("load", function () {
+                    try {
+                        const title = $iframe[0].contentDocument.title;
+                        if (title) $title.text(title.length > 40 ? title.substring(0,40) + "..." : title);
+                    } catch (err) {
+                        // cross-origin - keep generic title
+                        $title.text("Web Browser");
+                    }
+                    $bottom.text(history[historyIndex]);
+                    updateNavState();
+                });
+
+                // window dragging
+                (function makeDraggable($elem) {
+                    const $header = $elem.find(".browser-header");
+                    let dragging = false;
+                    let startX = 0, startY = 0, origX = 0, origY = 0;
+
+                    $header.on("mousedown", function (e) {
+                        dragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        const pos = $elem.position();
+                        origX = pos.left;
+                        origY = pos.top;
+                        // bring to front
+                        $elem.css("zIndex", ++browserTopZ);
+                        e.preventDefault();
+                    });
+
+                    $(document).on("mousemove.browserwin", function (e) {
+                        if (!dragging) return;
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+                        $elem.css({ left: (origX + dx) + "px", top: (origY + dy) + "px" });
+                    });
+
+                    $(document).on("mouseup.browserwin", function (e) {
+                        dragging = false;
+                    });
+
+                })($win);
+
+                // resize
+                (function makeResizable($elem) {
+                    const $res = $elem.find(".browser-resize");
+                    let resizing = false;
+                    let startX=0, startY=0, startW=0, startH=0;
+                    $res.on("mousedown", function (e) {
+                        resizing = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        startW = $elem.width();
+                        startH = $elem.height();
+                        $elem.css("zIndex", ++browserTopZ);
+                        e.preventDefault();
+                    });
+                    $(document).on("mousemove.browserresize", function (e) {
+                        if (!resizing) return;
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+                        $elem.css({ width: Math.max(360, startW + dx) + "px", height: Math.max(200, startH + dy) + "px" });
+                    });
+                    $(document).on("mouseup.browserresize", function (e) {
+                        resizing = false;
+                    });
+                })($win);
+
+                // close/minimize
+                $win.find(".btn-close").on("click", function () {
+                    $win.remove();
+                });
+
+                $win.find(".btn-minimize").on("click", function () {
+                    $win.hide();
+                    // create a taskbar entry if desired (not implemented)
+                    // restore on double click of title as a simple approach
+                });
+
+                // restore on double click header
+                $win.find(".browser-header").on("dblclick", function () {
+                    if ($win.is(":visible")) {
+                        // toggle minimize/restore
+                        if ($win.css("display") === "none") $win.show();
+                    } else {
+                        $win.show();
+                    }
+                });
+
+                // focus on click
+                $win.on("mousedown", function () {
+                    $(this).css("zIndex", ++browserTopZ);
+                });
+
+                // Allow right click inside iframe (don't block) - but keep global oncontextmenu=false in body
+                // (We won't change that here.)
+
+                return $win;
+            }
+
+            // Expose createBrowserWindow to global scope for other code to call
+            window.createBrowserWindow = createBrowserWindow;
 
             function updateClock() {
                 const now = new Date();
